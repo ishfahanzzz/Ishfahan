@@ -1,402 +1,733 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ishfahan 👒 Admin Panel</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f5f0eb;
-            margin: 0;
-            padding: 20px;
-            color: #333;
-        }
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-        .header {
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .profile h1 {
-            margin: 0;
-            font-size: 24px;
-        }
-        button {
-            cursor: pointer;
-            padding: 8px 16px;
-            border-radius: 20px;
-            border: 1px solid #ccc;
-            background: white;
-            font-size: 14px;
-        }
-        button:hover {
-            background: #f0e6d8;
-        }
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .tab-btn {
-            padding: 10px 20px;
-            border-radius: 25px;
-            border: 1px solid #ddd;
-            background: white;
-            font-weight: bold;
-        }
-        .tab-btn.active {
-            background: #d4945c;
-            color: white;
-            border-color: #d4945c;
-        }
-        .tab-content {
-            display: none;
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .tab-content.active {
-            display: block;
-        }
-        .add-form {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            align-items: end;
-        }
-        .add-form input[type="text"] {
-            padding: 10px;
-            border-radius: 20px;
-            border: 1px solid #ddd;
-            flex: 1;
-            min-width: 150px;
-        }
-        .add-btn {
-            background: #d4945c;
-            color: white;
-            border: none;
-            font-weight: bold;
-        }
-        .add-btn:hover {
-            background: #b8763e;
-        }
-        .items-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
-        }
-        .item-card {
-            border: 1px solid #eee;
-            border-radius: 15px;
-            padding: 15px;
-            text-align: center;
-            background: #fafafa;
-        }
-        .item-card img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 10px;
-            background: #eee;
-        }
-        .item-card h3 {
-            margin: 10px 0 5px;
-            font-size: 16px;
-        }
-        .item-card a {
-            color: #d4945c;
-            font-size: 13px;
-            word-break: break-all;
-        }
-        .delete-btn {
-            background: #ff4444;
-            color: white;
-            border: none;
-            margin-top: 8px;
-            font-size: 12px;
-        }
-        .delete-btn:hover {
-            background: #cc0000;
-        }
-        .empty-msg {
-            text-align: center;
-            color: #999;
-            padding: 30px;
-        }
-        .admin-panel {
-            background: #fdf0e2;
-            padding: 15px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            justify-content: center;
-        }
-        .admin-panel input {
-            padding: 10px;
-            border-radius: 20px;
-            border: 1px solid #ddd;
-            width: 200px;
-        }
-        .admin-panel button {
-            background: #d4945c;
-            color: white;
-            border: none;
-        }
-        .admin-panel button:hover {
-            background: #b8763e;
-        }
-        .locked {
-            opacity: 0.5;
-            pointer-events: none;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Ishfahan · creative space</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Inter', system-ui, sans-serif;
+      background: linear-gradient(145deg, #fce4ec 0%, #e3f2fd 45%, #f3e5ff 100%);
+      min-height: 100vh;
+      color: #2d2d3f;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* floating hearts canvas */
+    #heartsCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px 24px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* header */
+    .header {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(16px);
+      padding: 18px 28px;
+      border-radius: 32px;
+      margin-bottom: 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 15px 35px rgba(255, 105, 180, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      background: linear-gradient(120deg, #fff5fa 0%, #f5f9ff 100%);
+    }
+
+    .profile h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #ff6b9d, #6bb5ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.3px;
+    }
+
+    .menu-wrap {
+      position: relative;
+    }
+
+    .menu-btn {
+      background: rgba(255,255,255,0.7);
+      border: none;
+      font-size: 28px;
+      cursor: pointer;
+      color: #444;
+      padding: 10px 14px;
+      border-radius: 18px;
+      backdrop-filter: blur(10px);
+      transition: 0.25s;
+      line-height: 1;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    }
+
+    .menu-btn:hover {
+      background: white;
+      color: #ff6b9d;
+    }
+
+    .dropdown {
+      position: absolute;
+      top: 60px;
+      right: 0;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(25px);
+      border-radius: 24px;
+      box-shadow: 0 25px 45px rgba(0,0,0,0.12);
+      padding: 8px 0;
+      z-index: 1200;
+      display: none;
+      min-width: 200px;
+      border: 1px solid rgba(255,255,255,0.7);
+    }
+
+    .dropdown.show {
+      display: block;
+    }
+
+    .dropdown button {
+      display: block;
+      width: 100%;
+      padding: 14px 22px;
+      border: none;
+      background: transparent;
+      text-align: left;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 500;
+      color: #2d2d3f;
+      transition: 0.2s;
+      border-radius: 0;
+    }
+
+    .dropdown button:hover {
+      background: #fce4ec;
+      color: #c2185b;
+    }
+
+    .admin-entry {
+      opacity: 0.7;
+      font-size: 13px;
+    }
+
+    /* tabs - two in a row, bigger */
+    .tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .tab-btn {
+      padding: 22px 16px;
+      border-radius: 28px;
+      border: none;
+      font-weight: 700;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      background: white;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.04);
+      text-align: center;
+      letter-spacing: 0.3px;
+      backdrop-filter: blur(5px);
+    }
+
+    .tab-btn.active {
+      transform: scale(1.02);
+      box-shadow: 0 18px 30px rgba(0,0,0,0.12);
+      font-weight: 800;
+    }
+
+    .tab-content {
+      display: none;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(18px);
+      padding: 28px;
+      border-radius: 32px;
+      box-shadow: 0 20px 40px rgba(255, 105, 180, 0.1);
+      animation: fade 0.3s ease;
+      border: 1px solid rgba(255,255,255,0.7);
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fade {
+      from { opacity: 0.2; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .add-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 24px;
+      align-items: center;
+    }
+
+    .add-form input {
+      padding: 14px 18px;
+      border-radius: 40px;
+      border: 1px solid #e9dce4;
+      background: white;
+      flex: 2;
+      min-width: 180px;
+      font-size: 15px;
+    }
+
+    .add-btn {
+      background: #ff6b9d;
+      color: white;
+      border: none;
+      padding: 14px 26px;
+      border-radius: 40px;
+      font-weight: bold;
+      cursor: pointer;
+      background: linear-gradient(135deg, #ff6b9d, #c44569);
+    }
+
+    .items-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .item-card {
+      background: white;
+      border-radius: 24px;
+      padding: 18px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.04);
+      transition: 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border: 1px solid #f0e0ef;
+    }
+
+    .item-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 30px rgba(255,105,180,0.12);
+    }
+
+    .item-card h3 {
+      margin: 10px 0 6px;
+      font-size: 1.1rem;
+    }
+
+    .item-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn-sm {
+      padding: 8px 16px;
+      border-radius: 30px;
+      border: none;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      background: #f0e0ff;
+    }
+
+    .download-btn { background: #e0f0ff; color: #004a7c; }
+    .copy-btn { background: #ffe0ec; color: #b03060; }
+    .delete-btn { background: #ffcdd2; color: #b71c1c; }
+
+    .order-form input, .order-form textarea {
+      width: 100%;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 24px;
+      border: 1px solid #ddd;
+      font-family: inherit;
+      background: white;
+    }
+
+    .submit-order {
+      background: linear-gradient(135deg, #ff6b9d, #6bb5ff);
+      border: none;
+      color: white;
+      padding: 16px;
+      border-radius: 40px;
+      font-weight: bold;
+      width: 100%;
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+
+    /* smooth admin modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.3);
+      backdrop-filter: blur(8px);
+      z-index: 3000;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal.show {
+      display: flex;
+    }
+    .modal-content {
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(20px);
+      padding: 30px;
+      border-radius: 36px;
+      max-width: 520px;
+      width: 90%;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 35px 55px rgba(0,0,0,0.2);
+      scroll-behavior: smooth;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="profile">
-                <span style="font-size:30px;">👒</span>
-                <h1 id="nameDisplay">Ishfahan</h1>
-                <button onclick="editName()">✏️ Edit Name</button>
-            </div>
-            <div>
-                <span style="background:#fdf0e2; padding:8px 15px; border-radius:20px;">🔒 Admin</span>
-            </div>
-        </div>
+  <canvas id="heartsCanvas"></canvas>
 
-        <!-- Admin Login Panel -->
-        <div class="admin-panel" id="adminPanel">
-            <span>🔐 Admin Code:</span>
-            <input type="password" id="adminCodeInput" placeholder="Enter admin code">
-            <button onclick="loginAdmin()">Login</button>
-            <span id="adminStatus" style="color: red;">❌ Not logged in</span>
+  <div class="container">
+    <div class="header">
+      <div class="profile"><h1 id="nameDisplay">Ishfahan</h1></div>
+      <div class="menu-wrap">
+        <button class="menu-btn" id="menuToggle">☰</button>
+        <div class="dropdown" id="dropdownMenu">
+          <button id="adminAccessBtn" class="admin-entry">🔐 Admin panel</button>
+          <button onclick="window.location.href='mailto:ishfahan104@gmail.com'">📧 Contact</button>
         </div>
-
-        <div class="tabs">
-            <button class="tab-btn active" onclick="openTab('education')">📚 Education</button>
-            <button class="tab-btn" onclick="openTab('love')">❤️ Love</button>
-            <button class="tab-btn" onclick="openTab('game')">🎮 Game</button>
-            <button class="tab-btn" onclick="openTab('music')">🎵 Music</button>
-        </div>
-
-        <div id="tabContainer"></div>
+      </div>
     </div>
 
-    <script>
-        const ADMIN_CODE = "sabah_zzz";
-        let currentTab = "education";
-        let userName = "Ishfahan 👒";
-        let isAdminLoggedIn = false;
+    <!-- Admin login modal -->
+    <div class="modal" id="loginModal">
+      <div class="modal-content">
+        <h2 style="color:#ff6b9d;">Admin access</h2>
+        <input type="password" id="adminPassInput" placeholder="Enter code" style="width:100%; padding:12px; border-radius:20px; margin:15px 0;">
+        <button class="add-btn" onclick="loginAdmin()">Login</button>
+        <button class="btn-sm" style="margin-left:8px;" onclick="closeModal('loginModal')">Cancel</button>
+        <p id="loginError" style="color:red;"></p>
+      </div>
+    </div>
 
-        let allData = {
-            education: [],
-            love: [],
-            game: [],
-            music: []
-        };
+    <!-- Admin panel modal (smooth scroll) -->
+    <div class="modal" id="adminPanelModal">
+      <div class="modal-content" id="adminModalContent">
+        <h2>⚙️ Admin settings</h2>
+        <div id="adminInner"></div>
+        <button class="btn-sm" style="margin-top:15px;" onclick="closeModal('adminPanelModal')">Close</button>
+      </div>
+    </div>
 
-        // Load saved data
-        function loadData() {
-            let saved = localStorage.getItem("ishfahanData");
-            if (saved) {
-                let parsed = JSON.parse(saved);
-                allData = parsed.data || allData;
-                userName = parsed.name || userName;
-            }
-            document.getElementById("nameDisplay").innerText = userName;
+    <div class="tabs" id="tabsContainer"></div>
+    <div id="tabContainer"></div>
+  </div>
+
+  <script>
+    (function() {
+      const ADMIN_CODE = "sabah_zzz";
+      let currentTab = "education";
+      let userName = "Ishfahan";
+      let isAdmin = false;
+
+      // default tabs with colors
+      let tabNames = ["education", "love", "game", "music", "order"];
+      let tabBgColors = ["#ffe0ec", "#ffe0f0", "#e0f0ff", "#e8e0ff", "#ffe0e0"];
+      let tabTextColors = ["#d6336c", "#c2185b", "#1976d2", "#6a1b9a", "#d32f2f"];
+
+      let allData = {
+        education: [],
+        love: [],
+        game: [],
+        music: [],
+        order: []
+      };
+
+      // Load from localStorage
+      function loadState() {
+        const saved = localStorage.getItem("ishfahan_site_v4");
+        if (saved) {
+          try {
+            const p = JSON.parse(saved);
+            if (p.name) userName = p.name;
+            if (p.tabNames) tabNames = p.tabNames;
+            if (p.tabBgColors) tabBgColors = p.tabBgColors;
+            if (p.tabTextColors) tabTextColors = p.tabTextColors;
+            if (p.data) allData = p.data;
+            if (p.currentTab) currentTab = p.currentTab;
+          } catch(e){}
         }
+        document.getElementById("nameDisplay").innerText = userName;
+      }
 
-        // Save data
-        function saveData() {
-            localStorage.setItem("ishfahanData", JSON.stringify({
-                name: userName,
-                data: allData
-            }));
+      function saveState() {
+        localStorage.setItem("ishfahan_site_v4", JSON.stringify({
+          name: userName,
+          tabNames, tabBgColors, tabTextColors,
+          data: allData,
+          currentTab
+        }));
+      }
+
+      // Hearts canvas animation (smooth, non-emoji)
+      const canvas = document.getElementById('heartsCanvas');
+      const ctx = canvas.getContext('2d');
+      let hearts = [];
+      let animationId;
+
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
+
+      function spawnHearts(count = 12) {
+        for (let i=0; i<count; i++) {
+          hearts.push({
+            x: Math.random() * canvas.width,
+            y: canvas.height + 20,
+            size: Math.random() * 14 + 7,
+            speed: Math.random() * 1.6 + 0.6,
+            opacity: Math.random() * 0.45 + 0.35,
+            drift: Math.random() * 0.5 - 0.25
+          });
         }
+      }
 
-        // Admin login
-        function loginAdmin() {
-            let codeInput = document.getElementById("adminCodeInput");
-            let status = document.getElementById("adminStatus");
-            
-            if (codeInput.value === ADMIN_CODE) {
-                isAdminLoggedIn = true;
-                status.innerHTML = "✅ Logged in as Admin";
-                status.style.color = "green";
-                codeInput.value = "";
-                codeInput.type = "text";
-                codeInput.value = "••••••••";
-                codeInput.type = "password";
-                renderTabs();
-            } else {
-                isAdminLoggedIn = false;
-                status.innerHTML = "❌ Wrong code! Try again";
-                status.style.color = "red";
-                renderTabs();
-            }
+      function drawHeart(ctx, x, y, size, opacity) {
+        ctx.save();
+        ctx.globalAlpha = opacity;
+        ctx.fillStyle = `rgba(255, 107, 157, ${opacity})`;
+        ctx.beginPath();
+        const topCurveHeight = size * 0.3;
+        ctx.moveTo(x, y + topCurveHeight);
+        ctx.bezierCurveTo(x, y, x - size/2, y, x - size/2, y + topCurveHeight);
+        ctx.bezierCurveTo(x - size/2, y + (size + topCurveHeight)/2, x, y + (size + topCurveHeight)*0.8, x, y + size);
+        ctx.bezierCurveTo(x, y + (size + topCurveHeight)*0.8, x + size/2, y + (size + topCurveHeight)/2, x + size/2, y + topCurveHeight);
+        ctx.bezierCurveTo(x + size/2, y, x, y, x, y + topCurveHeight);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      function animateHearts() {
+        if (!canvas || !ctx) return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i=hearts.length-1; i>=0; i--) {
+          const h = hearts[i];
+          h.y -= h.speed;
+          h.x += h.drift;
+          drawHeart(ctx, h.x, h.y, h.size, h.opacity);
+          if (h.y < -40 || h.opacity <= 0.02) {
+            hearts.splice(i,1);
+          }
         }
+        animationId = requestAnimationFrame(animateHearts);
+      }
+      animateHearts();
 
-        // Check admin status
-        function requireAdmin() {
-            if (!isAdminLoggedIn) {
-                alert("⚠️ Please login with admin code first!");
-                return false;
-            }
-            return true;
-        }
+      function triggerHearts() {
+        spawnHearts(14);
+      }
 
-        // Edit name
-        function editName() {
-            if (!requireAdmin()) return;
-            
-            let newName = prompt("Enter new name:", userName);
-            if (newName && newName.trim()) {
-                userName = newName.trim();
-                document.getElementById("nameDisplay").innerText = userName;
-                saveData();
-            }
-        }
+      // UI render
+      function renderTabs() {
+        const container = document.getElementById('tabsContainer');
+        container.innerHTML = tabNames.map((name, idx) => {
+          const bg = tabBgColors[idx] || '#ffe0ec';
+          const color = tabTextColors[idx] || '#d6336c';
+          return `<button class="tab-btn ${currentTab===name?'active':''}" style="background:${bg}; color:${color};" data-tab="${name}">${name.charAt(0).toUpperCase()+name.slice(1)}</button>`;
+        }).join('');
 
-        // Switch tabs
-        function openTab(tabName) {
-            currentTab = tabName;
-            document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
-            document.querySelectorAll(".tab-btn").forEach(btn => {
-                if (btn.innerText.toLowerCase().includes(tabName)) btn.classList.add("active");
-            });
-            renderTabs();
-        }
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+          btn.addEventListener('click', function(e) {
+            const tab = this.dataset.tab;
+            openTab(tab);
+          });
+        });
 
-        // Add item
-        function addItem(tab) {
-            if (!requireAdmin()) return;
-            
-            let titleInput = document.getElementById("input-" + tab);
-            let fileInput = document.getElementById("file-" + tab);
-            let linkInput = document.getElementById("link-" + tab);
-            let title = titleInput.value.trim();
+        renderTabContent();
+      }
 
-            if (!title) {
-                alert("Enter a title!");
-                return;
-            }
-
-            let link = linkInput.value.trim();
-            let file = fileInput.files[0];
-
-            function saveItem(imageData) {
-                allData[tab].push({
-                    id: Date.now(),
-                    title: title,
-                    image: imageData || "",
-                    link: link
-                });
-                saveData();
-                renderTabs();
-                titleInput.value = "";
-                linkInput.value = "";
-                fileInput.value = "";
-            }
-
-            if (file) {
-                let reader = new FileReader();
-                reader.onload = function(e) {
-                    saveItem(e.target.result);
-                };
-                reader.readAsDataURL(file);
-            } else {
-                saveItem("");
-            }
-        }
-
-        // Delete item
-        function deleteItem(tab, id) {
-            if (!requireAdmin()) return;
-            
-            allData[tab] = allData[tab].filter(item => item.id !== id);
-            saveData();
-            renderTabs();
-        }
-
-        // Render everything
-        function renderTabs() {
-            let container = document.getElementById("tabContainer");
-            let tabs = ["education", "love", "game", "music"];
-            container.innerHTML = "";
-
-            tabs.forEach(tab => {
-                let div = document.createElement("div");
-                div.className = "tab-content";
-                if (tab === currentTab) div.classList.add("active");
-                div.id = "tab-" + tab;
-
-                let disabledAttr = isAdminLoggedIn ? "" : "disabled";
-                let lockedClass = isAdminLoggedIn ? "" : "locked";
-
-                div.innerHTML = `
-                    <div class="add-form ${lockedClass}">
-                        <input type="text" id="input-${tab}" placeholder="Title..." ${disabledAttr}>
-                        <input type="file" id="file-${tab}" accept="image/*" ${disabledAttr}>
-                        <input type="text" id="link-${tab}" placeholder="Link (optional)" ${disabledAttr}>
-                        <button class="add-btn" id="addBtn-${tab}" ${disabledAttr}>+ Add</button>
-                    </div>
-                    <div class="items-grid" id="grid-${tab}"></div>
-                `;
-
-                container.appendChild(div);
-
-                if (isAdminLoggedIn) {
-                    document.getElementById("addBtn-" + tab).onclick = function() {
-                        addItem(tab);
-                    };
-                }
-
-                renderGrid(tab);
-            });
-        }
-
-        function renderGrid(tab) {
-            let grid = document.getElementById("grid-" + tab);
-            if (!grid) return;
-            let items = allData[tab];
-
-            if (items.length === 0) {
-                grid.innerHTML = '<div class="empty-msg">No items yet</div>';
-                return;
-            }
-
-            grid.innerHTML = items.map(item => `
-                <div class="item-card">
-                    ${item.image ? `<img src="${item.image}" alt="${item.title}">` : '<div style="height:150px;background:#eee;border-radius:10px;display:flex;align-items:center;justify-content:center;">📷</div>'}
-                    <h3>${item.title}</h3>
-                    ${item.link ? `<a href="${item.link}" target="_blank">🔗 ${item.link.substring(0,30)}</a>` : '<span style="color:#999;font-size:13px;">No link</span>'}
-                    <br>
-                    ${isAdminLoggedIn ? `<button class="delete-btn" onclick="deleteItem('${tab}', ${item.id})">🗑 Delete</button>` : ''}
-                </div>
-            `).join("");
-        }
-
-        // Initialize
-        loadData();
+      function openTab(tab) {
+        currentTab = tab;
         renderTabs();
-    </script>
+        triggerHearts();
+        saveState();
+      }
+
+      function renderTabContent() {
+        const container = document.getElementById('tabContainer');
+        if (currentTab === 'order') {
+          container.innerHTML = `
+            <div class="tab-content active">
+              <h3 style="color:#d32f2f;">📋 Order personal projects</h3>
+              <form id="orderForm" class="order-form" onsubmit="handleOrderSubmit(event)">
+                <input type="text" id="orderName" placeholder="Your name" required>
+                <input type="email" id="orderEmail" placeholder="Your email" required>
+                <input type="tel" id="orderPhone" placeholder="Phone number">
+                <textarea id="orderDetails" placeholder="Describe what you want..." required></textarea>
+                <button type="submit" class="submit-order">Send request ✨</button>
+              </form>
+            </div>
+          `;
+          return;
+        }
+
+        const items = allData[currentTab] || [];
+        const itemsHtml = items.length === 0 
+          ? '<div class="empty-msg" style="padding:25px; color:#888;">✨ Nothing here yet.</div>'
+          : `<div class="items-grid">${items.map((item, i) => `
+              <div class="item-card">
+                <h3>${escapeHtml(item.title)}</h3>
+                <div class="item-actions">
+                  ${item.fileData ? `<button class="btn-sm download-btn" data-index="${i}">⬇ Download</button>` : ''}
+                  ${item.link ? `<button class="btn-sm copy-btn" data-link="${escapeHtml(item.link)}">📋 Copy link</button>` : ''}
+                  ${isAdmin ? `<button class="btn-sm delete-btn" data-index="${i}">🗑</button>` : ''}
+                </div>
+              </div>
+            `).join('')}</div>`;
+
+        container.innerHTML = `
+          <div class="tab-content active">
+            ${isAdmin ? `
+            <div class="add-form">
+              <input type="text" id="input-${currentTab}" placeholder="Title">
+              <input type="file" id="file-${currentTab}" accept="*/*">
+              <input type="url" id="link-${currentTab}" placeholder="or link">
+              <button class="add-btn" id="addItemBtn">+ Add</button>
+            </div>` : ''}
+            ${itemsHtml}
+          </div>
+        `;
+
+        if (isAdmin) {
+          document.getElementById('addItemBtn')?.addEventListener('click', ()=> addItem(currentTab));
+        }
+
+        // Download & copy listeners
+        document.querySelectorAll('.download-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const idx = e.target.dataset.index;
+            const item = allData[currentTab]?.[idx];
+            if (item && item.fileData) {
+              downloadFile(item.fileData, item.fileName || 'file');
+            }
+          });
+        });
+        document.querySelectorAll('.copy-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const link = e.target.dataset.link;
+            navigator.clipboard.writeText(link).then(() => alert('Link copied!'));
+          });
+        });
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const idx = e.target.dataset.index;
+            if (isAdmin && allData[currentTab]) {
+              allData[currentTab].splice(idx,1);
+              saveState();
+              renderTabContent();
+            }
+          });
+        });
+      }
+
+      function escapeHtml(text) {
+        return String(text).replace(/[&<>"]/g, function(m) {
+          if (m === '&') return '&amp;';
+          if (m === '<') return '&lt;';
+          if (m === '>') return '&gt;';
+          if (m === '"') return '&quot;';
+          return m;
+        });
+      }
+
+      async function addItem(tab) {
+        const title = document.getElementById(`input-${tab}`)?.value.trim();
+        if (!title) return alert('Title needed');
+        const fileInput = document.getElementById(`file-${tab}`);
+        const linkInput = document.getElementById(`link-${tab}`);
+        const link = linkInput?.value.trim() || '';
+        
+        let fileData = null, fileName = '';
+        if (fileInput && fileInput.files[0]) {
+          const file = fileInput.files[0];
+          fileName = file.name;
+          fileData = await fileToBase64(file);
+        }
+        if (!allData[tab]) allData[tab] = [];
+        allData[tab].push({ title, link, fileData, fileName });
+        saveState();
+        renderTabContent();
+      }
+
+      function fileToBase64(file) {
+        return new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.readAsDataURL(file);
+        });
+      }
+
+      function downloadFile(base64, filename) {
+        const a = document.createElement('a');
+        a.href = base64;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }
+
+      window.handleOrderSubmit = function(e) {
+        e.preventDefault();
+        const name = document.getElementById('orderName')?.value.trim();
+        const email = document.getElementById('orderEmail')?.value.trim();
+        const phone = document.getElementById('orderPhone')?.value.trim();
+        const details = document.getElementById('orderDetails')?.value.trim();
+        const subject = `Project order from ${name}`;
+        const body = `Name: ${name}%0D%0AEmail: ${email}%0D%0APhone: ${phone}%0D%0ADetails: ${details}`;
+        window.location.href = `mailto:ishfahan104@gmail.com?subject=${encodeURIComponent(subject)}&body=${body}`;
+      };
+
+      // Menu & admin
+      document.getElementById('menuToggle').addEventListener('click', (e) => {
+        e.stopPropagation();
+        document.getElementById('dropdownMenu').classList.toggle('show');
+      });
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.menu-wrap')) document.getElementById('dropdownMenu').classList.remove('show');
+      });
+
+      document.getElementById('adminAccessBtn').addEventListener('click', () => {
+        document.getElementById('dropdownMenu').classList.remove('show');
+        document.getElementById('loginModal').classList.add('show');
+      });
+
+      window.closeModal = (id) => document.getElementById(id).classList.remove('show');
+      window.loginAdmin = function() {
+        const pass = document.getElementById('adminPassInput').value;
+        if (pass === ADMIN_CODE) {
+          isAdmin = true;
+          document.getElementById('loginError').innerText = '';
+          closeModal('loginModal');
+          openAdminPanelModal();
+          renderTabs();
+        } else {
+          document.getElementById('loginError').innerText = 'Wrong code';
+        }
+      };
+
+      function openAdminPanelModal() {
+        const modal = document.getElementById('adminPanelModal');
+        const inner = document.getElementById('adminInner');
+        inner.innerHTML = `
+          <h3>👤 Name</h3>
+          <input id="newName" value="${escapeHtml(userName)}" style="width:100%; padding:12px; border-radius:20px;">
+          <button class="add-btn" id="updateNameBtn">Update</button>
+          <h3>📑 Tabs</h3>
+          <div id="tabsManager"></div>
+          <button class="add-btn" id="addTabBtn">+ New tab</button>
+          <h3>🎨 Colors</h3>
+          <div id="colorsManager"></div>
+        `;
+        modal.classList.add('show');
+        renderAdminTabsList();
+        renderAdminColorsList();
+
+        document.getElementById('updateNameBtn').addEventListener('click', ()=>{
+          const n = document.getElementById('newName').value.trim();
+          if(n){ userName = n; document.getElementById('nameDisplay').innerText = n; saveState(); renderTabs(); }
+        });
+        document.getElementById('addTabBtn').addEventListener('click', ()=>{
+          const name = prompt('Tab name');
+          if(name && name.trim()){
+            tabNames.push(name.trim());
+            tabBgColors.push('#ffe0ec');
+            tabTextColors.push('#d6336c');
+            allData[name.trim()] = [];
+            saveState(); renderTabs(); renderAdminTabsList(); renderAdminColorsList();
+          }
+        });
+      }
+
+      function renderAdminTabsList() {
+        const mgr = document.getElementById('tabsManager');
+        if(!mgr) return;
+        mgr.innerHTML = tabNames.map((t,i)=>`
+          <div style="margin:8px 0; display:flex; gap:6px; align-items:center;">
+            <input value="${escapeHtml(t)}" id="tabName${i}" style="width:130px; padding:8px; border-radius:16px;">
+            <button class="btn-sm" data-update="${i}">Update</button>
+            <button class="btn-sm" data-delete="${i}">Del</button>
+          </div>
+        `).join('');
+        document.querySelectorAll('[data-update]').forEach(b=>b.addEventListener('click', function(){
+          const i=this.dataset.update; const newName = document.getElementById(`tabName${i}`).value.trim();
+          if(newName && tabNames[i]!==newName){
+            allData[newName] = allData[tabNames[i]] || [];
+            delete allData[tabNames[i]];
+            tabNames[i]=newName;
+            saveState(); renderTabs(); renderAdminTabsList();
+          }
+        }));
+        document.querySelectorAll('[data-delete]').forEach(b=>b.addEventListener('click', function(){
+          if(tabNames.length<=1) return;
+          delete allData[tabNames[this.dataset.delete]];
+          tabNames.splice(this.dataset.delete,1); tabBgColors.splice(this.dataset.delete,1); tabTextColors.splice(this.dataset.delete,1);
+          saveState(); renderTabs(); renderAdminTabsList(); renderAdminColorsList();
+        }));
+      }
+
+      function renderAdminColorsList() {
+        const c = document.getElementById('colorsManager');
+        if(!c) return;
+        c.innerHTML = tabNames.map((t,i)=>`
+          <div style="margin:8px 0;">${t} <input type="color" value="${tabBgColors[i]}" id="bg${i}"> bg 
+          <input type="color" value="${tabTextColors[i]}" id="txt${i}"> text
+          <button class="btn-sm" data-coloridx="${i}">Apply</button></div>
+        `).join('');
+        document.querySelectorAll('[data-coloridx]').forEach(b=>b.addEventListener('click', function(){
+          const i=this.dataset.coloridx;
+          tabBgColors[i]=document.getElementById(`bg${i}`).value;
+          tabTextColors[i]=document.getElementById(`txt${i}`).value;
+          saveState(); renderTabs();
+        }));
+      }
+
+      // init
+      loadState();
+      if (!tabNames.includes(currentTab)) currentTab = tabNames[0];
+      renderTabs();
+      spawnHearts(8);
+    })();
+  </script>
 </body>
 </html>
