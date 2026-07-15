@@ -1,463 +1,402 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>will you forever be mine? ✨</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Segoe UI', 'Cormorant Garamond', Georgia, serif;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #fbe9e7;
-      position: relative;
-      overflow-x: hidden;
-      overflow-y: auto;
-      padding: 1rem;
-    }
-
-    /* BACKGROUND LAYER */
-    .background-layer {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: url('https://lh3.googleusercontent.com/u/0/d/1jijV5wZeSTLI2byV2gWAAHSf6ORFWn3R');
-      background-size: cover;
-      background-position: center 30%;
-      background-repeat: no-repeat;
-      filter: brightness(0.9) saturate(1.15);
-      z-index: 0;
-    }
-
-    /* FLOATING HEART SHAPES LAYER (image hearts, layer 2 under texts) */
-    .floating-hearts-layer {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 1;
-      overflow: hidden;
-    }
-
-    .heart-image-float {
-      position: absolute;
-      width: 60px;
-      height: 60px;
-      background-image: url('https://lh3.googleusercontent.com/u/0/d/1-3LCMJc1C7p6UccL8ySmmvpYr80Rqj0n');
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
-      opacity: 0.28;
-      filter: drop-shadow(0 8px 12px rgba(150, 60, 60, 0.4));
-      animation: driftHeartShape 22s infinite ease-in-out;
-      transform-origin: center;
-      border-radius: 20%;
-    }
-
-    @keyframes driftHeartShape {
-      0% { transform: translateY(0px) translateX(0px) scale(0.8) rotate(0deg); opacity: 0.2; }
-      20% { transform: translateY(-30px) translateX(25px) scale(1.1) rotate(8deg); opacity: 0.35; }
-      40% { transform: translateY(-50px) translateX(-20px) scale(0.9) rotate(-6deg); opacity: 0.25; }
-      60% { transform: translateY(-15px) translateX(30px) scale(1.05) rotate(4deg); opacity: 0.3; }
-      80% { transform: translateY(-35px) translateX(-18px) scale(0.85) rotate(-5deg); opacity: 0.22; }
-      100% { transform: translateY(8px) translateX(8px) scale(0.8) rotate(1deg); opacity: 0.2; }
-    }
-
-    /* MAIN CARD */
-    .container {
-      position: relative;
-      z-index: 3;
-      background: rgba(255, 245, 242, 0.7);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-radius: 3.8rem 3.8rem 3rem 3rem;
-      padding: 2.8rem 2rem 2.4rem;
-      max-width: 520px;
-      width: 100%;
-      box-shadow: 0 35px 60px rgba(120, 60, 70, 0.3), 0 0 0 1px rgba(255, 215, 215, 0.8);
-      text-align: center;
-      transition: all 0.4s ease;
-    }
-
-    h1 {
-      font-size: 2.5rem;
-      font-weight: 480;
-      color: #b8404c;
-      margin: 0.5rem 0 1.8rem;
-      letter-spacing: 1.5px;
-      text-shadow: 2px 2px 12px rgba(255, 220, 220, 0.9);
-      font-style: italic;
-      line-height: 1.3;
-    }
-
-    .btn-group {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 2.2rem;
-      flex-wrap: wrap;
-      position: relative;
-      height: 65px;
-      margin-top: 1rem;
-    }
-
-    button {
-      padding: 0.9rem 2.6rem;
-      font-size: 1.25rem;
-      font-weight: 600;
-      border: none;
-      border-radius: 3rem;
-      cursor: pointer;
-      background: rgba(255, 255, 255, 0.8);
-      backdrop-filter: blur(8px);
-      letter-spacing: 0.6px;
-      transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1);
-      box-shadow: 0 8px 22px rgba(180, 80, 80, 0.3);
-    }
-
-    #yesBtn {
-      background: #ff4d6d;
-      color: white;
-      border: 1px solid #ffb3c0;
-      box-shadow: 0 8px 25px #ff99aa;
-      z-index: 5;
-    }
-
-    #yesBtn:hover {
-      background: #e63950;
-      transform: scale(1.08);
-      box-shadow: 0 12px 28px #ff758c;
-    }
-
-    #noBtn {
-      background: #6b5e62;
-      color: #fce4e4;
-      border: 1px solid #ccb7b7;
-      transition: all 0.28s ease;
-      position: relative;
-    }
-
-    /* MIDDLE IMAGE (calendar image after swap) */
-    .overlay-image-top {
-      display: block;
-      margin: 0 auto 0.8rem;
-      max-width: 150px;
-      border-radius: 32px;
-      box-shadow: 0 10px 22px rgba(180, 70, 70, 0.6);
-      animation: softFloat 3.2s infinite alternate;
-      background: transparent;
-    }
-
-    @keyframes softFloat {
-      0% { transform: translateY(0px); }
-      100% { transform: translateY(-7px); }
-    }
-
-    .hidden-img {
-      display: none;
-    }
-
-    /* Text below middle image */
-    .memories-text {
-      font-size: 1.4rem;
-      font-weight: 500;
-      color: #b13e4b;
-      margin-top: 0.2rem;
-      margin-bottom: 0.8rem;
-      font-style: italic;
-      letter-spacing: 0.8px;
-      text-shadow: 1px 1px 6px rgba(255, 210, 210, 0.9);
-      display: none;
-    }
-
-    /* WIND-BLOWN CORNER (the other image) */
-    .calendar-wind {
-      position: fixed;
-      bottom: 25px;
-      right: 25px;
-      width: 120px;
-      height: 120px;
-      background-image: url('https://lh3.googleusercontent.com/u/0/d/1E-rmdpLxClXELKJR1puJFaYtzQBqnAUt');
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
-      filter: drop-shadow(0 12px 18px rgba(90, 30, 30, 0.55));
-      z-index: 10;
-      pointer-events: none;
-      transform-origin: bottom right;
-      animation: swayWind 4.5s infinite alternate ease-in-out;
-      border-radius: 16px;
-      display: none;
-    }
-
-    @keyframes swayWind {
-      0% { transform: translate(0px, 0px) rotate(-2deg) scale(1); }
-      40% { transform: translate(-10px, -18px) rotate(2.8deg) scale(1.06); }
-      100% { transform: translate(8px, -9px) rotate(-3.2deg) scale(0.96); }
-    }
-
-    /* ---- HIGH QUALITY HEART ANIMATION (falling from up to down) ---- */
-    .falling-heart {
-      position: fixed;
-      top: -60px;
-      z-index: 25;
-      pointer-events: none;
-      animation: fallDown linear forwards;
-      filter: drop-shadow(0 8px 12px rgba(200, 60, 80, 0.5));
-      transform-origin: center;
-    }
-
-    @keyframes fallDown {
-      0% {
-        transform: translateY(0) rotate(0deg) scale(0.4);
-        opacity: 0.95;
-      }
-      15% {
-        transform: translateY(12vh) rotate(15deg) scale(0.9);
-        opacity: 1;
-      }
-      40% {
-        transform: translateY(38vh) rotate(-10deg) scale(1.1);
-        opacity: 0.9;
-      }
-      70% {
-        transform: translateY(68vh) rotate(8deg) scale(0.8);
-        opacity: 0.65;
-      }
-      100% {
-        transform: translateY(105vh) rotate(-15deg) scale(0.3);
-        opacity: 0;
-      }
-    }
-
-    /* Heart SVG styling inline */
-    .heart-svg {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-
-    @media (max-width: 480px) {
-      .container {
-        padding: 2rem 1.2rem;
-      }
-      h1 {
-        font-size: 2rem;
-      }
-      .memories-text {
-        font-size: 1.2rem;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ishfahan 👒 Admin Panel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f0eb;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .profile h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        button {
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid #ccc;
+            background: white;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #f0e6d8;
+        }
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .tab-btn {
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: 1px solid #ddd;
+            background: white;
+            font-weight: bold;
+        }
+        .tab-btn.active {
+            background: #d4945c;
+            color: white;
+            border-color: #d4945c;
+        }
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .add-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: end;
+        }
+        .add-form input[type="text"] {
+            padding: 10px;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+            flex: 1;
+            min-width: 150px;
+        }
+        .add-btn {
+            background: #d4945c;
+            color: white;
+            border: none;
+            font-weight: bold;
+        }
+        .add-btn:hover {
+            background: #b8763e;
+        }
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .item-card {
+            border: 1px solid #eee;
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            background: #fafafa;
+        }
+        .item-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+            background: #eee;
+        }
+        .item-card h3 {
+            margin: 10px 0 5px;
+            font-size: 16px;
+        }
+        .item-card a {
+            color: #d4945c;
+            font-size: 13px;
+            word-break: break-all;
+        }
+        .delete-btn {
+            background: #ff4444;
+            color: white;
+            border: none;
+            margin-top: 8px;
+            font-size: 12px;
+        }
+        .delete-btn:hover {
+            background: #cc0000;
+        }
+        .empty-msg {
+            text-align: center;
+            color: #999;
+            padding: 30px;
+        }
+        .admin-panel {
+            background: #fdf0e2;
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+        }
+        .admin-panel input {
+            padding: 10px;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+            width: 200px;
+        }
+        .admin-panel button {
+            background: #d4945c;
+            color: white;
+            border: none;
+        }
+        .admin-panel button:hover {
+            background: #b8763e;
+        }
+        .locked {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+    </style>
 </head>
 <body>
-  <div class="background-layer"></div>
+    <div class="container">
+        <div class="header">
+            <div class="profile">
+                <span style="font-size:30px;">👒</span>
+                <h1 id="nameDisplay">Ishfahan</h1>
+                <button onclick="editName()">✏️ Edit Name</button>
+            </div>
+            <div>
+                <span style="background:#fdf0e2; padding:8px 15px; border-radius:20px;">🔒 Admin</span>
+            </div>
+        </div>
 
-  <!-- Floating heart shapes (image-based) everywhere -->
-  <div class="floating-hearts-layer" id="heartLayer"></div>
+        <!-- Admin Login Panel -->
+        <div class="admin-panel" id="adminPanel">
+            <span>🔐 Admin Code:</span>
+            <input type="password" id="adminCodeInput" placeholder="Enter admin code">
+            <button onclick="loginAdmin()">Login</button>
+            <span id="adminStatus" style="color: red;">❌ Not logged in</span>
+        </div>
 
-  <!-- Wind-blown corner image -->
-  <div class="calendar-wind" id="calendarWind"></div>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="openTab('education')">📚 Education</button>
+            <button class="tab-btn" onclick="openTab('love')">❤️ Love</button>
+            <button class="tab-btn" onclick="openTab('game')">🎮 Game</button>
+            <button class="tab-btn" onclick="openTab('music')">🎵 Music</button>
+        </div>
 
-  <div class="container" id="mainContainer">
-    <h1 id="questionText">will you forever be mine?</h1>
-
-    <!-- MIDDLE IMAGE (calendar image) -->
-    <img id="overlayImg" class="overlay-image-top hidden-img" src="https://lh3.googleusercontent.com/u/0/d/1Ta8NLyleyNMx57Mbtoo3uNsINZ5-9rcj" alt="calendar memory">
-    
-    <!-- Text below middle image -->
-    <p id="memoriesText" class="memories-text">Let's Create Memories Together</p>
-
-    <div class="btn-group">
-      <button id="yesBtn">Yes</button>
-      <button id="noBtn">No</button>
+        <div id="tabContainer"></div>
     </div>
-  </div>
 
-  <script>
-    (function() {
-      // ----- generate floating heart shapes from image -----
-      function generateHeartShapes() {
-        const layer = document.getElementById('heartLayer');
-        if (!layer) return;
-        layer.innerHTML = '';
-        const heartCount = 26;
-        for (let i = 0; i < heartCount; i++) {
-          const heartDiv = document.createElement('div');
-          heartDiv.className = 'heart-image-float';
-          heartDiv.style.left = Math.random() * 92 + '%';
-          heartDiv.style.top = Math.random() * 88 + '%';
-          const size = 45 + Math.random() * 65;
-          heartDiv.style.width = size + 'px';
-          heartDiv.style.height = size + 'px';
-          heartDiv.style.animationDuration = (18 + Math.random() * 20) + 's';
-          heartDiv.style.animationDelay = Math.random() * 10 + 's';
-          heartDiv.style.opacity = 0.22 + Math.random() * 0.25;
-          layer.appendChild(heartDiv);
+    <script>
+        const ADMIN_CODE = "sabah_zzz";
+        let currentTab = "education";
+        let userName = "Ishfahan 👒";
+        let isAdminLoggedIn = false;
+
+        let allData = {
+            education: [],
+            love: [],
+            game: [],
+            music: []
+        };
+
+        // Load saved data
+        function loadData() {
+            let saved = localStorage.getItem("ishfahanData");
+            if (saved) {
+                let parsed = JSON.parse(saved);
+                allData = parsed.data || allData;
+                userName = parsed.name || userName;
+            }
+            document.getElementById("nameDisplay").innerText = userName;
         }
-      }
-      generateHeartShapes();
-      window.addEventListener('resize', generateHeartShapes);
 
-      // ----- buttons -----
-      const noBtn = document.getElementById('noBtn');
-      const yesBtn = document.getElementById('yesBtn');
-      const questionText = document.getElementById('questionText');
-      const overlayImg = document.getElementById('overlayImg');
-      const calendarWind = document.getElementById('calendarWind');
-      const memoriesText = document.getElementById('memoriesText');
+        // Save data
+        function saveData() {
+            localStorage.setItem("ishfahanData", JSON.stringify({
+                name: userName,
+                data: allData
+            }));
+        }
 
-      function moveNoButton() {
-        if (!noBtn) return;
-        const padding = 20;
-        const maxX = window.innerWidth - noBtn.offsetWidth - padding;
-        const maxY = window.innerHeight - noBtn.offsetHeight - padding;
-        const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
-        const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
-        noBtn.style.position = 'fixed';
-        noBtn.style.left = randomX + 'px';
-        noBtn.style.top = randomY + 'px';
-        noBtn.style.zIndex = '120';
-        noBtn.style.transition = 'left 0.22s ease-out, top 0.22s ease-out';
-      }
+        // Admin login
+        function loginAdmin() {
+            let codeInput = document.getElementById("adminCodeInput");
+            let status = document.getElementById("adminStatus");
+            
+            if (codeInput.value === ADMIN_CODE) {
+                isAdminLoggedIn = true;
+                status.innerHTML = "✅ Logged in as Admin";
+                status.style.color = "green";
+                codeInput.value = "";
+                codeInput.type = "text";
+                codeInput.value = "••••••••";
+                codeInput.type = "password";
+                renderTabs();
+            } else {
+                isAdminLoggedIn = false;
+                status.innerHTML = "❌ Wrong code! Try again";
+                status.style.color = "red";
+                renderTabs();
+            }
+        }
 
-      if (noBtn) {
-        noBtn.addEventListener('mouseenter', moveNoButton);
-        noBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          moveNoButton();
-        });
-        noBtn.addEventListener('touchstart', (e) => {
-          e.preventDefault();
-          moveNoButton();
-        });
-      }
+        // Check admin status
+        function requireAdmin() {
+            if (!isAdminLoggedIn) {
+                alert("⚠️ Please login with admin code first!");
+                return false;
+            }
+            return true;
+        }
 
-      // ----- CREATE HIGH QUALITY SVG HEART ELEMENT -----
-      function createSVGHeart(color = '#e63950', size = 32) {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'falling-heart';
-        wrapper.style.width = size + 'px';
-        wrapper.style.height = size + 'px';
-        wrapper.innerHTML = `
-          <svg class="heart-svg" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M16 28C16 28 4 20.5 4 12C4 8.5 6.5 5.5 10 5.5C12.5 5.5 14.5 7 16 9C17.5 7 19.5 5.5 22 5.5C25.5 5.5 28 8.5 28 12C28 20.5 16 28 16 28Z" 
-                  fill="${color}" stroke="#ffb3c1" stroke-width="1.2" />
-          </svg>
-        `;
-        return wrapper;
-      }
+        // Edit name
+        function editName() {
+            if (!requireAdmin()) return;
+            
+            let newName = prompt("Enter new name:", userName);
+            if (newName && newName.trim()) {
+                userName = newName.trim();
+                document.getElementById("nameDisplay").innerText = userName;
+                saveData();
+            }
+        }
 
-      // ----- FALLING HEARTS ANIMATION (up to down) -----
-      function spawnFallingHearts() {
-        const colors = ['#e63950', '#ff4d6d', '#ff758f', '#ff99aa', '#d90429', '#ef476f', '#c9184a'];
-        const heartCount = 28;
-        
-        for (let i = 0; i < heartCount; i++) {
-          setTimeout(() => {
-            const heart = createSVGHeart(
-              colors[Math.floor(Math.random() * colors.length)],
-              24 + Math.random() * 45
-            );
-            
-            // Random horizontal position
-            const leftPos = Math.random() * 94;
-            heart.style.left = leftPos + '%';
-            
-            // Random animation duration (falling speed)
-            const duration = 2.8 + Math.random() * 5.5;
-            heart.style.animationDuration = duration + 's';
-            
-            // Slight random rotation start
-            heart.style.transform = `rotate(${Math.random() * 40 - 20}deg)`;
-            
-            document.body.appendChild(heart);
-            
-            // Clean up after animation
-            heart.addEventListener('animationend', () => {
-              heart.remove();
+        // Switch tabs
+        function openTab(tabName) {
+            currentTab = tabName;
+            document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+            document.querySelectorAll(".tab-btn").forEach(btn => {
+                if (btn.innerText.toLowerCase().includes(tabName)) btn.classList.add("active");
             });
-          }, i * 60); // staggered start for wave effect
-        }
-      }
-
-      // ----- YES button action -----
-      function handleYes() {
-        if (!yesBtn || !noBtn) return;
-
-        // Hide No button
-        noBtn.style.display = 'none';
-
-        // Update main text
-        questionText.innerHTML = "Yay! I Knew It ❤️";
-        questionText.style.color = "#c1293b";
-        questionText.style.fontWeight = "550";
-
-        // Show middle image (calendar image)
-        if (overlayImg) {
-          overlayImg.classList.remove('hidden-img');
-          overlayImg.style.display = 'block';
+            renderTabs();
         }
 
-        // Show "Let's Create Memories Together" text below middle image
-        if (memoriesText) {
-          memoriesText.style.display = 'block';
+        // Add item
+        function addItem(tab) {
+            if (!requireAdmin()) return;
+            
+            let titleInput = document.getElementById("input-" + tab);
+            let fileInput = document.getElementById("file-" + tab);
+            let linkInput = document.getElementById("link-" + tab);
+            let title = titleInput.value.trim();
+
+            if (!title) {
+                alert("Enter a title!");
+                return;
+            }
+
+            let link = linkInput.value.trim();
+            let file = fileInput.files[0];
+
+            function saveItem(imageData) {
+                allData[tab].push({
+                    id: Date.now(),
+                    title: title,
+                    image: imageData || "",
+                    link: link
+                });
+                saveData();
+                renderTabs();
+                titleInput.value = "";
+                linkInput.value = "";
+                fileInput.value = "";
+            }
+
+            if (file) {
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    saveItem(e.target.result);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                saveItem("");
+            }
         }
 
-        // Hide Yes button
-        yesBtn.style.display = 'none';
-
-        // Show wind-blown corner image
-        if (calendarWind) {
-          calendarWind.style.display = 'block';
+        // Delete item
+        function deleteItem(tab, id) {
+            if (!requireAdmin()) return;
+            
+            allData[tab] = allData[tab].filter(item => item.id !== id);
+            saveData();
+            renderTabs();
         }
 
-        // Container style update
-        const container = document.getElementById('mainContainer');
-        if (container) {
-          container.style.background = 'rgba(255, 238, 235, 0.78)';
+        // Render everything
+        function renderTabs() {
+            let container = document.getElementById("tabContainer");
+            let tabs = ["education", "love", "game", "music"];
+            container.innerHTML = "";
+
+            tabs.forEach(tab => {
+                let div = document.createElement("div");
+                div.className = "tab-content";
+                if (tab === currentTab) div.classList.add("active");
+                div.id = "tab-" + tab;
+
+                let disabledAttr = isAdminLoggedIn ? "" : "disabled";
+                let lockedClass = isAdminLoggedIn ? "" : "locked";
+
+                div.innerHTML = `
+                    <div class="add-form ${lockedClass}">
+                        <input type="text" id="input-${tab}" placeholder="Title..." ${disabledAttr}>
+                        <input type="file" id="file-${tab}" accept="image/*" ${disabledAttr}>
+                        <input type="text" id="link-${tab}" placeholder="Link (optional)" ${disabledAttr}>
+                        <button class="add-btn" id="addBtn-${tab}" ${disabledAttr}>+ Add</button>
+                    </div>
+                    <div class="items-grid" id="grid-${tab}"></div>
+                `;
+
+                container.appendChild(div);
+
+                if (isAdminLoggedIn) {
+                    document.getElementById("addBtn-" + tab).onclick = function() {
+                        addItem(tab);
+                    };
+                }
+
+                renderGrid(tab);
+            });
         }
 
-        // 🌧️ HIGH QUALITY FALLING HEARTS ANIMATION (up to down)
-        spawnFallingHearts();
-        
-        // Additional waves for more dramatic effect
-        setTimeout(() => spawnFallingHearts(), 400);
-        setTimeout(() => spawnFallingHearts(), 900);
-      }
+        function renderGrid(tab) {
+            let grid = document.getElementById("grid-" + tab);
+            if (!grid) return;
+            let items = allData[tab];
 
-      if (yesBtn) {
-        yesBtn.addEventListener('click', handleYes);
-      }
+            if (items.length === 0) {
+                grid.innerHTML = '<div class="empty-msg">No items yet</div>';
+                return;
+            }
 
-      // Keep no button in bounds on resize
-      window.addEventListener('resize', () => {
-        if (noBtn && noBtn.style.position === 'fixed') {
-          const padding = 20;
-          const maxX = window.innerWidth - noBtn.offsetWidth - padding;
-          const maxY = window.innerHeight - noBtn.offsetHeight - padding;
-          let left = parseFloat(noBtn.style.left) || 200;
-          let top = parseFloat(noBtn.style.top) || 200;
-          if (left > maxX) noBtn.style.left = maxX + 'px';
-          if (top > maxY) noBtn.style.top = maxY + 'px';
-          if (left < padding) noBtn.style.left = padding + 'px';
-          if (top < padding) noBtn.style.top = padding + 'px';
+            grid.innerHTML = items.map(item => `
+                <div class="item-card">
+                    ${item.image ? `<img src="${item.image}" alt="${item.title}">` : '<div style="height:150px;background:#eee;border-radius:10px;display:flex;align-items:center;justify-content:center;">📷</div>'}
+                    <h3>${item.title}</h3>
+                    ${item.link ? `<a href="${item.link}" target="_blank">🔗 ${item.link.substring(0,30)}</a>` : '<span style="color:#999;font-size:13px;">No link</span>'}
+                    <br>
+                    ${isAdminLoggedIn ? `<button class="delete-btn" onclick="deleteItem('${tab}', ${item.id})">🗑 Delete</button>` : ''}
+                </div>
+            `).join("");
         }
-      });
-    })();
-  </script>
+
+        // Initialize
+        loadData();
+        renderTabs();
+    </script>
 </body>
 </html>
