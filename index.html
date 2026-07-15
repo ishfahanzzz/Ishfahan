@@ -20,7 +20,6 @@
       overflow-x: hidden;
     }
 
-    /* floating hearts canvas */
     #heartsCanvas {
       position: fixed;
       top: 0;
@@ -39,7 +38,6 @@
       z-index: 2;
     }
 
-    /* header */
     .header {
       background: rgba(255, 255, 255, 0.8);
       backdrop-filter: blur(16px);
@@ -118,7 +116,6 @@
       font-weight: 500;
       color: #2d2d3f;
       transition: 0.2s;
-      border-radius: 0;
     }
 
     .dropdown button:hover {
@@ -131,7 +128,6 @@
       font-size: 13px;
     }
 
-    /* tabs - two in a row, bigger */
     .tabs {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -211,19 +207,18 @@
 
     .items-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
       gap: 20px;
     }
 
     .item-card {
       background: white;
       border-radius: 24px;
-      padding: 18px;
+      padding: 16px;
       box-shadow: 0 10px 20px rgba(0,0,0,0.04);
       transition: 0.2s;
       display: flex;
       flex-direction: column;
-      align-items: center;
       border: 1px solid #f0e0ef;
     }
 
@@ -232,9 +227,39 @@
       box-shadow: 0 20px 30px rgba(255,105,180,0.12);
     }
 
+    .thumbnail-img {
+      width: 100%;
+      height: 130px;
+      object-fit: cover;
+      border-radius: 16px;
+      background: #f5f0ff;
+      margin-bottom: 10px;
+    }
+
     .item-card h3 {
-      margin: 10px 0 6px;
+      margin: 6px 0 4px;
       font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .link-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 6px 0 4px;
+      background: #f8f4ff;
+      border-radius: 20px;
+      padding: 6px 12px;
+      font-size: 13px;
+      word-break: break-all;
+    }
+
+    .link-text {
+      flex: 1;
+      color: #2d2d3f;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .item-actions {
@@ -242,7 +267,6 @@
       gap: 8px;
       margin-top: 10px;
       flex-wrap: wrap;
-      justify-content: center;
     }
 
     .btn-sm {
@@ -281,7 +305,6 @@
       cursor: pointer;
     }
 
-    /* smooth admin modal */
     .modal {
       display: none;
       position: fixed;
@@ -307,9 +330,6 @@
       box-shadow: 0 35px 55px rgba(0,0,0,0.2);
       scroll-behavior: smooth;
     }
-    .hidden {
-      display: none;
-    }
   </style>
 </head>
 <body>
@@ -327,7 +347,6 @@
       </div>
     </div>
 
-    <!-- Admin login modal -->
     <div class="modal" id="loginModal">
       <div class="modal-content">
         <h2 style="color:#ff6b9d;">Admin access</h2>
@@ -338,7 +357,6 @@
       </div>
     </div>
 
-    <!-- Admin panel modal (smooth scroll) -->
     <div class="modal" id="adminPanelModal">
       <div class="modal-content" id="adminModalContent">
         <h2>⚙️ Admin settings</h2>
@@ -358,7 +376,6 @@
       let userName = "Ishfahan";
       let isAdmin = false;
 
-      // default tabs with colors
       let tabNames = ["education", "love", "game", "music", "order"];
       let tabBgColors = ["#ffe0ec", "#ffe0f0", "#e0f0ff", "#e8e0ff", "#ffe0e0"];
       let tabTextColors = ["#d6336c", "#c2185b", "#1976d2", "#6a1b9a", "#d32f2f"];
@@ -371,9 +388,8 @@
         order: []
       };
 
-      // Load from localStorage
       function loadState() {
-        const saved = localStorage.getItem("ishfahan_site_v4");
+        const saved = localStorage.getItem("ishfahan_site_v5");
         if (saved) {
           try {
             const p = JSON.parse(saved);
@@ -389,7 +405,7 @@
       }
 
       function saveState() {
-        localStorage.setItem("ishfahan_site_v4", JSON.stringify({
+        localStorage.setItem("ishfahan_site_v5", JSON.stringify({
           name: userName,
           tabNames, tabBgColors, tabTextColors,
           data: allData,
@@ -397,11 +413,9 @@
         }));
       }
 
-      // Hearts canvas animation (smooth, non-emoji)
       const canvas = document.getElementById('heartsCanvas');
       const ctx = canvas.getContext('2d');
       let hearts = [];
-      let animationId;
 
       function resizeCanvas() {
         canvas.width = window.innerWidth;
@@ -446,11 +460,9 @@
           h.y -= h.speed;
           h.x += h.drift;
           drawHeart(ctx, h.x, h.y, h.size, h.opacity);
-          if (h.y < -40 || h.opacity <= 0.02) {
-            hearts.splice(i,1);
-          }
+          if (h.y < -40) hearts.splice(i,1);
         }
-        animationId = requestAnimationFrame(animateHearts);
+        requestAnimationFrame(animateHearts);
       }
       animateHearts();
 
@@ -458,7 +470,6 @@
         spawnHearts(14);
       }
 
-      // UI render
       function renderTabs() {
         const container = document.getElementById('tabsContainer');
         container.innerHTML = tabNames.map((name, idx) => {
@@ -469,11 +480,9 @@
 
         document.querySelectorAll('.tab-btn').forEach(btn => {
           btn.addEventListener('click', function(e) {
-            const tab = this.dataset.tab;
-            openTab(tab);
+            openTab(this.dataset.tab);
           });
         });
-
         renderTabContent();
       }
 
@@ -507,10 +516,15 @@
           ? '<div class="empty-msg" style="padding:25px; color:#888;">✨ Nothing here yet.</div>'
           : `<div class="items-grid">${items.map((item, i) => `
               <div class="item-card">
+                ${item.thumbnail ? `<img src="${item.thumbnail}" class="thumbnail-img" alt="thumb">` : ''}
                 <h3>${escapeHtml(item.title)}</h3>
+                ${item.link ? `
+                <div class="link-row">
+                  <span class="link-text">${escapeHtml(item.link)}</span>
+                  <button class="btn-sm copy-btn" data-link="${escapeHtml(item.link)}">📋</button>
+                </div>` : ''}
                 <div class="item-actions">
                   ${item.fileData ? `<button class="btn-sm download-btn" data-index="${i}">⬇ Download</button>` : ''}
-                  ${item.link ? `<button class="btn-sm copy-btn" data-link="${escapeHtml(item.link)}">📋 Copy link</button>` : ''}
                   ${isAdmin ? `<button class="btn-sm delete-btn" data-index="${i}">🗑</button>` : ''}
                 </div>
               </div>
@@ -522,7 +536,8 @@
             <div class="add-form">
               <input type="text" id="input-${currentTab}" placeholder="Title">
               <input type="file" id="file-${currentTab}" accept="*/*">
-              <input type="url" id="link-${currentTab}" placeholder="or link">
+              <input type="url" id="link-${currentTab}" placeholder="Link (optional)">
+              <input type="url" id="thumb-${currentTab}" placeholder="Thumbnail image URL">
               <button class="add-btn" id="addItemBtn">+ Add</button>
             </div>` : ''}
             ${itemsHtml}
@@ -533,14 +548,11 @@
           document.getElementById('addItemBtn')?.addEventListener('click', ()=> addItem(currentTab));
         }
 
-        // Download & copy listeners
         document.querySelectorAll('.download-btn').forEach(btn => {
           btn.addEventListener('click', (e) => {
             const idx = e.target.dataset.index;
             const item = allData[currentTab]?.[idx];
-            if (item && item.fileData) {
-              downloadFile(item.fileData, item.fileName || 'file');
-            }
+            if (item && item.fileData) downloadFile(item.fileData, item.fileName || 'file');
           });
         });
         document.querySelectorAll('.copy-btn').forEach(btn => {
@@ -576,7 +588,9 @@
         if (!title) return alert('Title needed');
         const fileInput = document.getElementById(`file-${tab}`);
         const linkInput = document.getElementById(`link-${tab}`);
+        const thumbInput = document.getElementById(`thumb-${tab}`);
         const link = linkInput?.value.trim() || '';
+        const thumbnail = thumbInput?.value.trim() || '';
         
         let fileData = null, fileName = '';
         if (fileInput && fileInput.files[0]) {
@@ -585,7 +599,7 @@
           fileData = await fileToBase64(file);
         }
         if (!allData[tab]) allData[tab] = [];
-        allData[tab].push({ title, link, fileData, fileName });
+        allData[tab].push({ title, link, thumbnail, fileData, fileName });
         saveState();
         renderTabContent();
       }
@@ -618,7 +632,6 @@
         window.location.href = `mailto:ishfahan104@gmail.com?subject=${encodeURIComponent(subject)}&body=${body}`;
       };
 
-      // Menu & admin
       document.getElementById('menuToggle').addEventListener('click', (e) => {
         e.stopPropagation();
         document.getElementById('dropdownMenu').classList.toggle('show');
@@ -722,7 +735,6 @@
         }));
       }
 
-      // init
       loadState();
       if (!tabNames.includes(currentTab)) currentTab = tabNames[0];
       renderTabs();
