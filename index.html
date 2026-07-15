@@ -280,7 +280,9 @@
     }
 
     .download-btn { background: #e0f0ff; color: #004a7c; }
+    .open-btn { background: #d4edda; color: #155724; }
     .copy-btn { background: #ffe0ec; color: #b03060; }
+    .listen-btn { background: #fff3cd; color: #856404; }
     .delete-btn { background: #ffcdd2; color: #b71c1c; }
 
     .order-form input, .order-form textarea {
@@ -341,6 +343,12 @@
       color: #4a2d5c;
       font-weight: 600;
     }
+
+    .audio-player {
+      width: 100%;
+      margin-top: 8px;
+      border-radius: 20px;
+    }
   </style>
 </head>
 <body>
@@ -400,7 +408,7 @@
       };
 
       function loadState() {
-        const saved = localStorage.getItem("ishfahan_site_v6");
+        const saved = localStorage.getItem("ishfahan_site_v7");
         if (saved) {
           try {
             const p = JSON.parse(saved);
@@ -416,7 +424,7 @@
       }
 
       function saveState() {
-        localStorage.setItem("ishfahan_site_v6", JSON.stringify({
+        localStorage.setItem("ishfahan_site_v7", JSON.stringify({
           name: userName,
           tabNames, tabBgColors, tabTextColors,
           data: allData,
@@ -504,6 +512,33 @@
         saveState();
       }
 
+      function getActionsForTab(tab, item, index) {
+        switch(tab) {
+          case 'education':
+            return `
+              ${item.fileData ? `<button class="btn-sm download-btn" data-index="${index}">⬇ Download</button>` : ''}
+              ${item.link ? `<button class="btn-sm open-btn" data-link="${escapeHtml(item.link)}">🔗 Open</button>` : ''}
+            `;
+          case 'love':
+            return `
+              ${item.link ? `<button class="btn-sm open-btn" data-link="${escapeHtml(item.link)}">🔗 Open</button>` : ''}
+              ${item.fileData ? `<button class="btn-sm download-btn" data-index="${index}">⬇ Download</button>` : ''}
+              ${item.link ? `<button class="btn-sm copy-btn" data-link="${escapeHtml(item.link)}">📋 Copy</button>` : ''}
+            `;
+          case 'game':
+            return `
+              ${item.link ? `<button class="btn-sm open-btn" data-link="${escapeHtml(item.link)}">🔗 Open</button>` : ''}
+            `;
+          case 'music':
+            return `
+              ${item.fileData ? `<button class="btn-sm download-btn" data-index="${index}">⬇ Download</button>` : ''}
+              ${item.fileData ? `<button class="btn-sm listen-btn" data-index="${index}">🎧 Listen</button>` : ''}
+            `;
+          default:
+            return '';
+        }
+      }
+
       function renderTabContent() {
         const container = document.getElementById('tabContainer');
         if (currentTab === 'order') {
@@ -529,13 +564,13 @@
               <div class="item-card">
                 ${item.thumbnail ? `<img src="${item.thumbnail}" class="thumbnail-img" alt="thumb">` : ''}
                 <h3>${escapeHtml(item.title)}</h3>
-                ${item.link ? `
+                ${item.link && currentTab !== 'music' ? `
                 <div class="link-row">
                   <span class="link-text">${escapeHtml(item.link)}</span>
-                  <button class="btn-sm copy-btn" data-link="${escapeHtml(item.link)}">📋</button>
                 </div>` : ''}
+                ${currentTab === 'music' && item.fileData ? `<audio class="audio-player" controls src="${item.fileData}"></audio>` : ''}
                 <div class="item-actions">
-                  ${item.fileData ? `<button class="btn-sm download-btn" data-index="${i}">⬇ Download</button>` : ''}
+                  ${getActionsForTab(currentTab, item, i)}
                   ${isAdmin ? `<button class="btn-sm delete-btn" data-index="${i}">🗑</button>` : ''}
                 </div>
               </div>
@@ -568,10 +603,26 @@
             if (item && item.fileData) downloadFile(item.fileData, item.fileName || 'file');
           });
         });
+        document.querySelectorAll('.open-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const link = e.target.dataset.link;
+            if (link) window.open(link, '_blank');
+          });
+        });
         document.querySelectorAll('.copy-btn').forEach(btn => {
           btn.addEventListener('click', (e) => {
             const link = e.target.dataset.link;
             navigator.clipboard.writeText(link).then(() => alert('Link copied!'));
+          });
+        });
+        document.querySelectorAll('.listen-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const idx = e.target.dataset.index;
+            const item = allData[currentTab]?.[idx];
+            if (item && item.fileData) {
+              const audio = new Audio(item.fileData);
+              audio.play();
+            }
           });
         });
         document.querySelectorAll('.delete-btn').forEach(btn => {
