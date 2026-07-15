@@ -330,6 +330,17 @@
       box-shadow: 0 35px 55px rgba(0,0,0,0.2);
       scroll-behavior: smooth;
     }
+
+    .file-label {
+      background: #f0e0ff;
+      padding: 12px 20px;
+      border-radius: 30px;
+      font-size: 14px;
+      cursor: pointer;
+      display: inline-block;
+      color: #4a2d5c;
+      font-weight: 600;
+    }
   </style>
 </head>
 <body>
@@ -389,7 +400,7 @@
       };
 
       function loadState() {
-        const saved = localStorage.getItem("ishfahan_site_v5");
+        const saved = localStorage.getItem("ishfahan_site_v6");
         if (saved) {
           try {
             const p = JSON.parse(saved);
@@ -405,7 +416,7 @@
       }
 
       function saveState() {
-        localStorage.setItem("ishfahan_site_v5", JSON.stringify({
+        localStorage.setItem("ishfahan_site_v6", JSON.stringify({
           name: userName,
           tabNames, tabBgColors, tabTextColors,
           data: allData,
@@ -535,9 +546,11 @@
             ${isAdmin ? `
             <div class="add-form">
               <input type="text" id="input-${currentTab}" placeholder="Title">
-              <input type="file" id="file-${currentTab}" accept="*/*">
+              <input type="file" id="file-${currentTab}" accept="*/*" style="display:none;">
+              <label for="file-${currentTab}" class="file-label">📁 Choose file</label>
+              <input type="file" id="thumb-${currentTab}" accept="image/*" style="display:none;">
+              <label for="thumb-${currentTab}" class="file-label">🖼️ Thumbnail</label>
               <input type="url" id="link-${currentTab}" placeholder="Link (optional)">
-              <input type="url" id="thumb-${currentTab}" placeholder="Thumbnail image URL">
               <button class="add-btn" id="addItemBtn">+ Add</button>
             </div>` : ''}
             ${itemsHtml}
@@ -587,10 +600,9 @@
         const title = document.getElementById(`input-${tab}`)?.value.trim();
         if (!title) return alert('Title needed');
         const fileInput = document.getElementById(`file-${tab}`);
-        const linkInput = document.getElementById(`link-${tab}`);
         const thumbInput = document.getElementById(`thumb-${tab}`);
+        const linkInput = document.getElementById(`link-${tab}`);
         const link = linkInput?.value.trim() || '';
-        const thumbnail = thumbInput?.value.trim() || '';
         
         let fileData = null, fileName = '';
         if (fileInput && fileInput.files[0]) {
@@ -598,6 +610,12 @@
           fileName = file.name;
           fileData = await fileToBase64(file);
         }
+        
+        let thumbnail = null;
+        if (thumbInput && thumbInput.files[0]) {
+          thumbnail = await fileToBase64(thumbInput.files[0]);
+        }
+        
         if (!allData[tab]) allData[tab] = [];
         allData[tab].push({ title, link, thumbnail, fileData, fileName });
         saveState();
